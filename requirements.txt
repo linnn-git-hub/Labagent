@@ -1,0 +1,6 @@
+fastapi
+uvicorn[standard]
+pydantic
+httpx
+PyPDF2
+openai
