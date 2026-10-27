@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Outdoor Travel Emergency Manager</title>
+    <style>
+      :root {
+        --bg: #f4f7fb;
+        --panel: #ffffff;
+        --primary: #0f172a;
+        --secondary: #2563eb;
+        --accent: #0ea5e9;
+        --warning: #f59e0b;
+        --danger: #dc2626;
+        --success: #10b981;
+        --border: #dfe7f5;
+        --text: #1f2937;
+        --muted: #64748b;
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(180deg, #eef6ff 0%, #f8fafc 100%);
+        color: var(--text);
+      }
+      .container {
+        max-width: 1200px;
+        margin: 32px auto;
+        padding: 0 20px 40px;
+      }
+      .hero {
+        background: linear-gradient(135deg, #0f172a, #1d4ed8);
+        border-radius: 20px;
+        color: white;
+        padding: 28px 30px;
+        box-shadow: 0 18px 35px rgba(15, 23, 42, 0.18);
+        margin-bottom: 24px;
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-size: clamp(2rem, 4vw, 2.7rem);
+      }
+      .subtitle {
+        margin: 0;
+        color: rgba(255,255,255,0.82);
+        line-height: 1.6;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+        gap: 22px;
+      }
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 22px;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+      }
+      .panel h2 {
+        margin: 0 0 16px;
+        font-size: 1.4rem;
+      }
+      .row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--text);
+      }
+      input, select, button, textarea {
+        width: 100%;
+        font: inherit;
+      }
+      input, select, textarea {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: #fff;
+        padding: 12px 14px;
+        color: var(--text);
+      }
+      textarea {
+        min-height: 110px;
+        resize: vertical;
+      }
+      button {
+        border: none;
+        border-radius: 12px;
+        padding: 12px 18px;
+        font-weight: 700;
+        cursor: pointer;
+        color: white;
+        background: linear-gradient(135deg, var(--secondary), var(--accent));
+        transition: transform 0.15s ease, opacity 0.15s ease;
+      }
+      button:hover {
+        transform: translateY(-1px);
+        opacity: 0.96;
+      }
+      .button-secondary {
+        background: linear-gradient(135deg, #374151, #4b5563);
+      }
+      .status {
+        margin-top: 12px;
+        font-size: 0.94rem;
+        color: var(--muted);
+      }
+      .ok { color: var(--success); }
+      .error { color: var(--danger); }
+      .warn { color: var(--warning); }
+      .results {
+        margin-top: 24px;
+        display: grid;
+        gap: 18px;
+      }
+      .route-map {
+        width: 100%;
+        height: 340px;
+        margin-top: 16px;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        overflow: hidden;
+        background: #eaf3ff;
+      }
+      .result-card {
+        background: #f8fafc;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 18px;
+      }
+      .risk-badge {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        background: #dbeafe;
+        color: #1d4ed8;
+      }
+      .risk-high { background: #fee2e2; color: var(--danger); }
+      .risk-medium { background: #fef3c7; color: #b45309; }
+      .risk-low { background: #dcfce7; color: #166534; }
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 12px;
+        margin-top: 14px;
+      }
+      .meta-box {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px;
+      }
+      .meta-label {
+        display: block;
+        font-size: 0.75rem;
+        color: var(--muted);
+        margin-bottom: 4px;
+      }
+      .meta-value {
+        font-weight: 700;
+      }
+      .recommendations {
+        margin: 0;
+        padding-left: 18px;
+        line-height: 1.8;
+      }
+      details {
+        margin-top: 16px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: white;
+      }
+      details summary {
+        cursor: pointer;
+        padding: 10px 12px;
+        font-weight: 600;
+      }
+      pre {
+        margin: 0;
+        padding: 12px;
+        white-space: pre-wrap;
+        word-break: break-word;
+        overflow: auto;
+        font-family: "Consolas", "Courier New", monospace;
+        font-size: 0.82rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="hero">
+        <h1>差旅与户外活动应急管家</h1>
+        <p class="subtitle">
+          结合活动行程、现场场地方案与实时天气，自动评估户外活动风险，并给出备用场地与交通应急建议。
+        </p>
+      </div>
+
+      <div class="grid">
+        <section class="panel">
+          <h2>活动风险评估</h2>
+          <div class="row">
+            <div>
+              <label for="activityType">活动类型</label>
+              <select id="activityType">
+                <option value="商业路演">商业路演</option>
+                <option value="摄影采风">摄影采风</option>
+                <option value="户外团建">户外团建</option>
+              </select>
+            </div>
+            <div>
+              <label for="currentLocation">当前城市</label>
+              <input id="currentLocation" type="text" value="" placeholder="将从本地活动文件解析" />
+            </div>
+          </div>
+
+          <div class="row" style="margin-top: 14px;">
+            <div>
+              <label for="backupLocation">备用场地</label>
+              <input id="backupLocation" type="text" value="" placeholder="将从本地活动文件解析" />
+            </div>
+            <div>
+              <label for="riskThreshold">风险阈值</label>
+              <input id="riskThreshold" type="number" value="3" min="1" max="5" />
+            </div>
+          </div>
+
+          <div style="margin-top: 14px;">
+            <label for="itineraryFile">活动行程表（txt / pdf）</label>
+            <input id="itineraryFile" type="file" accept=".txt,.pdf" />
+          </div>
+
+          <div style="margin-top: 14px;">
+            <label for="venuePlanFile">场地方案（txt / pdf）</label>
+            <input id="venuePlanFile" type="file" accept=".txt,.pdf" />
+          </div>
+
+          <button id="riskBtn" style="margin-top: 16px;">评估风险</button>
+          <div class="status" id="riskStatus">等待评估</div>
+        </section>
+
+        <section class="panel">
+          <h2>天气查询</h2>
+          <div>
+            <label for="weatherLocation">查询天气城市</label>
+            <input id="weatherLocation" type="text" value="" placeholder="请输入中文或英文城市名" />
+          </div>
+
+          <button id="weatherBtn" style="margin-top: 16px;">查询天气</button>
+          <div class="status" id="weatherStatus">等待查询</div>
+        </section>
+
+        <section class="panel">
+          <h2>路线查询</h2>
+          <div>
+            <label for="routeOrigin">起点</label>
+            <input id="routeOrigin" type="text" value="" placeholder="请输入起点" />
+          </div>
+
+          <div style="margin-top: 14px;">
+            <label for="routeDestination">终点</label>
+            <input id="routeDestination" type="text" value="" placeholder="请输入终点" />
+          </div>
+
+          <div style="margin-top: 14px;">
+            <label for="routeMode">路线模式</label>
+            <select id="routeMode">
+              <option value="driving">driving</option>
+              <option value="transit">transit</option>
+              <option value="walking">walking</option>
+            </select>
+          </div>
+
+          <button id="routeBtn" class="button-secondary" style="margin-top: 16px;">查询路线</button>
+          <div class="status" id="routeStatus">等待查询</div>
+          <div id="routeMap" class="route-map"></div>
+        </section>
+      </div>
+
+      <div class="results">
+        <section class="result-card" id="riskResultBox">
+          <p style="margin: 0; color: var(--muted);">风险评估结果将显示在这里。</p>
+        </section>
+
+        <section class="result-card" id="weatherResultBox">
+          <p style="margin: 0; color: var(--muted);">天气查询结果将显示在这里。</p>
+        </section>
+
+        <section class="result-card" id="routeResultBox">
+          <p style="margin: 0; color: var(--muted);">路线查询结果将显示在这里。</p>
+        </section>
+      </div>
+    </div>
+
+    <script src="https://webapi.amap.com/maps?v=2.0&key=b5c9399821e1f475e7cbfe06f4250bea&securityJsCode=c336ce4b5450735d824a3ed40b666d28"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+      if (window.pdfjsLib) {
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      }
+    </script>
+    <script src="/app.js"></script>
+  </body>
+</html>
